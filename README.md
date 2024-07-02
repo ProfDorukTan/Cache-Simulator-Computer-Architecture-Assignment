@@ -12,6 +12,7 @@ This project implements a direct-mapped cache simulator for a write-back, write-
 - Provides detailed statistics on cache performance
 - Does not allow illogical cache configurations (powers of 2)
 
+
 ## Prerequisites
 
 To compile and run the cache simulator, you need:
@@ -36,7 +37,7 @@ To run the cache simulator, use the following command:
 
     ./cachesim <tracefilename> <cacheblocks> <blockwords>
 
-## Example
+### Example
     ./cachesim bubble_sort_trace_096.txt 4 8
 
 ## Output
@@ -54,7 +55,7 @@ where:
     NCWH: Number of cache write hits
     NCWM: Number of cache write misses
 
-## Example Output
+### Example Output
     1101154, 384592, 361952, 332456, 1055910, 45244, 384592, 0
 
 ## Input File Format
@@ -67,6 +68,13 @@ The input file should contain a series of memory access operations, one per line
 
 ### Example Input File
     ! Example trace file
-    R 000 0001
-    R 000 0002
-    W 001 0002
+    R 0000 0001
+    R 0000 0F02
+    W 0010 0F02
+
+### Considerations for Different Bus Sizes
+The example input file provided uses a 16-bit address and a 16-bit data bus configuration. Ensure that the data bus sizes in your input file match the configuration specified in the source code. If necessary, you can adjust the bus sizes in the source code by modifying the following definitions:
+
+    // CHANGE ACCORDINGLY
+    #define ADDRESS_BUS_BITS 16
+    #define DATA_BUS_BITS 16
