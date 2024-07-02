@@ -1,0 +1,67 @@
+! File Name:    Atila_10866352_validation.txt
+! Author:       Doruk Tan Atila
+! Student ID:   10866352
+! Last Updated: 19 April 2024
+! Command:      .\Atila_10866352_cachesim.exe .\Atila_10866352_validation.txt 128 8
+
+! Output Format: CPUR, CPUW, NRA, NWA, NCRH, NCRM, NCWH, NCWM
+! Expected Output: 8, 7, 56, 16, 4, 4, 4, 3
+
+! ----- Initially CMBID 0 holds nothing VB=0
+
+! Test cache miss - READ - Valid bit 0 - Block 0
+R 00000 0000
+! Expected: CPUR++, CPUW, NRA+=8, NWA, NCRH, NCRM+, NCWH, NCWM
+! Parameters: 1, 0, 8, 0, 0, 1, 0, 0
+! ----- CMBID 0 holds MMBID 0 VB=0
+
+! Test cache miss - WRITE - Valid bit 0 - Block 1
+W 00008 1111
+! Expected: CPUR, CPUW++, NRA+=8, NWA, NCRH, NCRM, NCWH, NCWM++
+! Parameters: 1, 1, 16, 0, 0, 1, 0, 1
+! ----- CMBID 0 holds MMBID 0 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
+
+! 4 Test cache hit - READ - Block 0
+R 00000 2222
+R 00002 2222
+R 00004 2222
+R 00006 2222
+! Expected: CPUR+=4, CPUW, NRA, NWA, NCRH+=4, NCRM, NCWH, NCWM
+! Parameters: 5, 1, 16, 0, 4, 1, 0, 1
+! ----- CMBID 0 holds MMBID 0 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
+
+! 4 Test cache hit - WRITE - Block 1
+W 00008 3333
+W 0000A 3333
+W 0000C 3333
+W 0000E 3333
+! Expected: CPUR, CPUW+=4, NRA, NWA, NCRH, NCRM, NCWH+=4, NCWM
+! Parameters: 5, 5, 16, 0, 4, 1, 4, 1
+! ----- CMBID 0 holds MMBID 0 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
+
+! 2 test cache miss - READ - Valid bit 1 / Tag NO match / Dirty bit 0 - Block 0
+R 00400 4444
+R 00807 4444
+! Expected: CPUR+=2, CPUW, NRA+=2*8, NWA, NCRH, NCRM+=2, NCWH, NCWM
+! Parameters: 7, 5, 32, 0, 4, 3, 4, 1
+! ----- CMBID 0 holds MMBID 256 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
+
+! Test cache miss - WRITE - Valid bit 1 / Tag NO match / Dirty bit 0 - Block 0
+W 00C00 5555
+! Expected: CPUR, CPUW++, NRA+=8, NWA, NCRH, NCRM, NCWH, NCWM++
+! Parameters: 7, 6, 40, 0, 4, 3, 4, 2
+! ----- CMBID 0 holds MMBID 384 VB=1 ----- CMBID 1 holds MMBID 1 VB=1
+
+
+! Test cache miss - READ - Valid bit 1 / Tag NO match / Dirty bit 1 - Block 0
+R 00000 6666
+! Expected: CPUR++, CPUW, NRA+=8, NWA+=8, NCRH, NCRM++, NCWH, NCWM
+! Parameters: 8, 6, 48, 8, 4, 4, 4, 2
+! ----- CMBID 0 holds MMBID 0 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
+
+
+! Test cache miss - WRITE - Valid bit 1 / Tag NO match / Dirty bit 1 - Block 1
+W 00408 7777
+! Expected: CPUR, CPUW++, NRA+=8, NWA+=8, NCRH, NCRM, NCWH, NCWM++
+! Parameters: 8, 7, 56, 16, 4, 4, 4, 3
+! ----- CMBID 0 holds MMBID 128 VB=0 ----- CMBID 1 holds MMBID 1 VB=1
